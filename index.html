@@ -6,6 +6,7 @@
     <title>Unity Web Player | FLAPPY BOBR</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script> 
   </head>
   <body>
     <div id="unity-container" class="unity-desktop">
@@ -23,6 +24,29 @@
         <div id="unity-build-title">FLAPPY BOBR</div>
       </div>
     </div>
+    <script>
+    window.Telegram.WebApp.expand();
+
+    window.addEventListener('load', () => {
+        const tg = window.Telegram.WebApp;
+        const user = tg.initDataUnsafe.user;
+
+        if (user) {
+            const userId = user.id;
+            console.log("Telegram User ID:", userId);
+
+            // Передача ID в Unity через Unity WebGL
+            if (window.unityInstance) {
+                window.unityInstance.SendMessage('GameManager', 'SetUserId', userId);
+            } else {
+                console.error("Unity WebGL не загружен");
+            }
+        } else {
+            console.error("Не удалось получить данные пользователя Telegram");
+        }
+    });
+</script>
+
     <script>
       var canvas = document.querySelector("#unity-canvas");
 
