@@ -100,7 +100,7 @@
 
               if (window.unityInstance) {
                   console.log("Отправка ID и имени в Unity...");
-                  window.unityInstance.SendMessage('GameSession', 'SetTelegramUserId', `${userId},${username}`);
+                  window.unityInstance.SendMessage('GameSession', 'SetTelegramUserId', `${userId}|${username}`);
               } else {
                   console.error("Unity WebGL не загружен");
               }
