@@ -22,13 +22,11 @@
         <div id="unity-logo-title-footer"></div>
         <div id="unity-fullscreen-button"></div>
         <div id="unity-build-title">FLAPPY BOBR</div>
-        <button id="startButton" style="padding: 10px 20px; font-size: 20px;">Начать игру</button>
       </div>
     </div>
 
     <script>
       var canvas = document.querySelector("#unity-canvas");
-      var startButton = document.getElementById("startButton");
 
       var buildUrl = "./Build"; 
       var loaderUrl = buildUrl + "/BOBER2.loader.js";
@@ -43,49 +41,41 @@
         productVersion: "1.0",
       };
 
-      function initializeUnity() {
-        startButton.style.display = "none"; // Скрыть кнопку после нажатия
-        document.querySelector("#unity-loading-bar").style.display = "block";
+      document.querySelector("#unity-loading-bar").style.display = "block";
 
-        var script = document.createElement("script");
-        script.src = loaderUrl;
+      var script = document.createElement("script");
+      script.src = loaderUrl;
 
-        script.onload = () => {
-          createUnityInstance(canvas, config, (progress) => {
-            document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
-          }).then((unityInstance) => {
-            window.unityInstance = unityInstance;
-            document.querySelector("#unity-loading-bar").style.display = "none";
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
+        }).then((unityInstance) => {
+          window.unityInstance = unityInstance;
+          document.querySelector("#unity-loading-bar").style.display = "none";
 
-            const tg = window.Telegram.WebApp;
-            const user = tg.initDataUnsafe.user;
+          const tg = window.Telegram.WebApp;
+          const user = tg.initDataUnsafe.user;
 
-            if (user) {
-                const username = user.username || "Unknown";
-                console.log("Telegram Username:", username);
+          if (user) {
+              const username = user.username || "Unknown";
+              console.log("Telegram Username:", username);
 
-                if (window.unityInstance) {
-                    console.log("Отправка Username в Unity...");
-                    window.unityInstance.SendMessage('GameSession', 'SetTelegramUsername', username);
-                } else {
-                    console.error("Unity WebGL не загружен");
-                }
-            } else {
-                console.error("Не удалось получить данные пользователя Telegram");
-            }
+              if (window.unityInstance) {
+                  console.log("Отправка Username в Unity...");
+                  window.unityInstance.SendMessage('GameSession', 'SetTelegramUsername', username);
+              } else {
+                  console.error("Unity WebGL не загружен");
+              }
+          } else {
+              console.error("Не удалось получить данные пользователя Telegram");
+          }
 
-          }).catch((message) => {
-            alert(message);
-          });
-        };
+        }).catch((message) => {
+          alert(message);
+        });
+      };
 
-        document.body.appendChild(script);
-      }
-
-      startButton.addEventListener("click", () => {
-        console.log("Пользователь нажал кнопку 'Начать игру'");
-        initializeUnity();
-      });
+      document.body.appendChild(script);
     </script>
   </body>
 </html>
