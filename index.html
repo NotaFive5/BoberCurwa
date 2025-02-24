@@ -47,7 +47,7 @@
         updateBannerVisibility();
       }
 
-      var buildUrl = "Build";
+      var buildUrl = "./Build"; // Убедись, что Build находится в той же директории
       var loaderUrl = buildUrl + "/BOBER2.loader.js";
       var config = {
         arguments: [],
@@ -58,4 +58,62 @@
         companyName: "DefaultCompany",
         productName: "FLAPPY BOBR",
         productVersion: "1.0",
-        showBanner: unityShow
+        showBanner: unityShowBanner,
+      };
+
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+        document.querySelector("#unity-container").className = "unity-mobile";
+        canvas.className = "unity-mobile";
+      } else {
+        canvas.style.width = "1080px";
+        canvas.style.height = "1920px";
+      }
+
+      document.querySelector("#unity-loading-bar").style.display = "block";
+
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+
+      script.onload = () => {
+        console.log("Unity скрипт загружается...");
+        createUnityInstance(canvas, config, (progress) => {
+          document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
+        }).then((unityInstance) => {
+          window.unityInstance = unityInstance;
+          document.querySelector("#unity-loading-bar").style.display = "none";
+          document.querySelector("#unity-fullscreen-button").onclick = () => {
+            unityInstance.SetFullscreen(1);
+          };
+
+          const tg = window.Telegram.WebApp;
+          const user = tg.initDataUnsafe.user;
+
+          if (user) {
+              const userId = user.id;
+              const username = user.username || "Unknown";
+              console.log("Telegram User ID:", userId);
+              console.log("Telegram Username:", username);
+
+              if (window.unityInstance) {
+                  console.log("Отправка ID и имени в Unity...");
+                  window.unityInstance.SendMessage('GameSession', 'SetTelegramUserId', `${userId},${username}`);
+              } else {
+                  console.error("Unity WebGL не загружен");
+              }
+          } else {
+              console.error("Не удалось получить данные пользователя Telegram");
+          }
+
+        }).catch((message) => {
+          alert(message);
+        });
+      };
+
+      document.body.appendChild(script);
+    </script>
+  </body>
+</html>
