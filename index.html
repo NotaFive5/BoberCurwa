@@ -121,17 +121,18 @@
               const username = user.username || "Unknown"; 
               console.log("Telegram Username:", username);
               
-              // Отображение имени пользователя поверх игры
               document.getElementById('debug-info').innerText = `Username: ${username}`;
 
-              // Отправка username в Unity напрямую в GameSession
-              if (window.unityInstance) {
-                  console.log("Отправка username в Unity...");
-                  window.unityInstance.SendMessage('GameManager', 'SetUsername', String(username));
-              } else {
-                  console.error("Unity WebGL не загружен");
-                  document.getElementById('debug-info').innerText = "Ошибка: Unity WebGL не загружен!";
-              }
+              // Ожидание загрузки Unity перед отправкой username
+              const interval = setInterval(() => {
+                  if (window.unityInstance) {
+                      console.log("Отправка username в Unity...");
+                      window.unityInstance.SendMessage('GameSession', 'SetTelegramUsername', String(username));
+                      clearInterval(interval);
+                  } else {
+                      console.warn("Ожидание загрузки Unity WebGL...");
+                  }
+              }, 500);
           } else {
               console.error("Не удалось получить данные пользователя Telegram");
               document.getElementById('debug-info').innerText = "Не удалось получить данные пользователя Telegram";
