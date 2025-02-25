@@ -94,12 +94,14 @@
           if (user) {
               const username = user.username || "Unknown"; // Получаем username пользователя
               console.log("Telegram Username:", username);
+              document.getElementById('debug-info').innerText = `Username: ${username}`;
           
               if (window.unityInstance) {
                   console.log("Отправка username в Unity...");
                   window.unityInstance.SendMessage('GameSession', 'SetTelegramUsername', String(username));
               } else {
                   console.error("Unity WebGL не загружен");
+                document.getElementById('debug-info').innerText = "Не удалось получить данные пользователя Telegram";
               }
           } else {
               console.error("Не удалось получить данные пользователя Telegram");
