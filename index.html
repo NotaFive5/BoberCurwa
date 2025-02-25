@@ -9,6 +9,7 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script> 
   </head>
   <body>
+    <!-- Контейнер для Unity -->
     <div id="unity-container" class="unity-desktop">
       <canvas id="unity-canvas" width=1080 height=1920 tabindex="-1"></canvas>
       <div id="unity-loading-bar">
@@ -23,6 +24,23 @@
         <div id="unity-fullscreen-button"></div>
         <div id="unity-build-title">FLAPPY BOBR</div>
       </div>
+    </div>
+
+    <!-- Окно отладки поверх игры -->
+    <div id="debug-info" style="
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 9999;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+        max-width: 300px;
+        overflow-wrap: break-word;
+        font-size: 12px;
+    ">
+        Загрузка данных...
     </div>
 
     <script>
@@ -88,25 +106,32 @@
             unityInstance.SetFullscreen(1);
           };
 
+          // 🌐 Получение данных пользователя из Telegram Web App
           const tg = window.Telegram.WebApp;
+          console.log("Telegram WebApp объект:", tg);
+
           const user = tg.initDataUnsafe.user;
-          
+          console.log("Данные пользователя:", user);
+
           if (user) {
-              const username = user.username || "Unknown"; // Получаем username пользователя
+              const username = user.username || "Unknown"; 
               console.log("Telegram Username:", username);
+              
+              // Отображение имени пользователя поверх игры
               document.getElementById('debug-info').innerText = `Username: ${username}`;
-          
+
+              // Отправка username в Unity (если нужно)
               if (window.unityInstance) {
                   console.log("Отправка username в Unity...");
                   window.unityInstance.SendMessage('GameSession', 'SetTelegramUsername', String(username));
               } else {
                   console.error("Unity WebGL не загружен");
-                document.getElementById('debug-info').innerText = "Не удалось получить данные пользователя Telegram";
+                  document.getElementById('debug-info').innerText = "Ошибка: Unity WebGL не загружен!";
               }
           } else {
               console.error("Не удалось получить данные пользователя Telegram");
+              document.getElementById('debug-info').innerText = "Не удалось получить данные пользователя Telegram";
           }
-
 
         }).catch((message) => {
           alert(message);
