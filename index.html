@@ -46,6 +46,7 @@
     <script>
       var canvas = document.querySelector("#unity-canvas");
 
+      // Функция отображения баннера предупреждений
       function unityShowBanner(msg, type) {
         var warningBanner = document.querySelector("#unity-warning");
         function updateBannerVisibility() {
@@ -54,10 +55,10 @@
         var div = document.createElement('div');
         div.innerHTML = msg;
         warningBanner.appendChild(div);
-        if (type == 'error') div.style = 'background: red; padding: 10px;';
+        if (type === 'error') div.style = 'background: red; padding: 10px;';
         else {
-          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-          setTimeout(function() {
+          if (type === 'warning') div.style = 'background: yellow; padding: 10px;';
+          setTimeout(() => {
             warningBanner.removeChild(div);
             updateBannerVisibility();
           }, 5000);
@@ -65,6 +66,7 @@
         updateBannerVisibility();
       }
 
+      // Настройки Unity
       var buildUrl = "Build";
       var loaderUrl = buildUrl + "/BOBER2.loader.js";
       var config = {
@@ -79,6 +81,7 @@
         showBanner: unityShowBanner,
       };
 
+      // Адаптация под мобильные устройства
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         var meta = document.createElement('meta');
         meta.name = 'viewport';
@@ -93,6 +96,7 @@
 
       document.querySelector("#unity-loading-bar").style.display = "block";
 
+      // Загрузка скрипта Unity
       var script = document.createElement("script");
       script.src = loaderUrl;
 
@@ -106,7 +110,7 @@
             unityInstance.SetFullscreen(1);
           };
 
-          // 🌐 Получение данных пользователя из Telegram Web App
+          // Получение данных пользователя из Telegram Web App
           const tg = window.Telegram.WebApp;
           console.log("Telegram WebApp объект:", tg);
 
@@ -120,10 +124,10 @@
               // Отображение имени пользователя поверх игры
               document.getElementById('debug-info').innerText = `Username: ${username}`;
 
-              // Отправка username в Unity (если нужно)
+              // Отправка username в Unity напрямую в GameSession
               if (window.unityInstance) {
                   console.log("Отправка username в Unity...");
-                  window.unityInstance.SendMessage('GameSession', 'SetTelegramUsername', String(username));
+                  window.unityInstance.SendMessage('GameManager', 'SetUsername', String(username));
               } else {
                   console.error("Unity WebGL не загружен");
                   document.getElementById('debug-info').innerText = "Ошибка: Unity WebGL не загружен!";
