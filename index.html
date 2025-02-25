@@ -112,17 +112,16 @@
 
           // Получение данных пользователя из Telegram Web App
           const tg = window.Telegram.WebApp;
-          console.log("Telegram WebApp объект:", tg);
+            console.log("Telegram WebApp объект:", tg);
 
-          const user = tg.initDataUnsafe.user;
-          console.log("Данные пользователя:", user);
+            const user = tg.initDataUnsafe.user;
+            console.log("Данные пользователя:", user);
 
-          if (user) {
-              const username = user.username || "Unknown"; 
-              console.log("Telegram Username:", username);
-              
-              // Отображение имени пользователя поверх игры
-              document.getElementById('debug-info').innerText = `Username: ${username}`;
+            if (user) {
+                const username = user.username || "Unknown"; 
+                console.log("Telegram Username:", username);
+
+                document.getElementById('debug-info').innerText = `Username: ${username}`;
 
               // Отправка username в Unity напрямую в GameSession
               if (window.unityInstance) {
