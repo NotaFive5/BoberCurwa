@@ -108,8 +108,7 @@
         }).then((unityInstance) => {
           window.unityInstance = unityInstance;
           document.querySelector("#unity-loading-bar").style.display = "none";
-          document.querySelector("#unity-fullscreen-button").onclick = () => {
-            unityInstance.SetFullscreen(1);
+          
           };
 
           // Получение данных пользователя из Telegram Web App
