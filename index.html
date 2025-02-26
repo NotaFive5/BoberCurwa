@@ -21,13 +21,13 @@
       <div id="unity-warning"></div>
       <div id="unity-footer">
         <div id="unity-logo-title-footer"></div>
-        
+        <div id="unity-fullscreen-button"></div>
         <div id="unity-build-title">FLAPPY BOBR</div>
       </div>
     </div>
 
     <!-- Окно отладки поверх игры -->
-     <div id="debug-info" style="
+    <div id="debug-info" style="
         position: fixed;
         top: 10px;
         left: 10px;
@@ -78,7 +78,7 @@
         companyName: "DefaultCompany",
         productName: "FLAPPY BOBR",
         productVersion: "1.0",
-        showBanner: unityShowBanner
+        showBanner: unityShowBanner,
       };
 
       // Адаптация под мобильные устройства
@@ -108,8 +108,9 @@
         }).then((unityInstance) => {
           window.unityInstance = unityInstance;
           document.querySelector("#unity-loading-bar").style.display = "none";
-          
-          
+          document.querySelector("#unity-fullscreen-button").onclick = () => {
+            unityInstance.SetFullscreen(1);
+          };
 
           // Получение данных пользователя из Telegram Web App
           const tg = window.Telegram.WebApp;
@@ -122,7 +123,7 @@
                 const username = user.username || "Unknown"; 
                 console.log("Telegram Username:", username);
 
-                document.getElementById('debug-info').innerText = Username: ${username};
+                document.getElementById('debug-info').innerText = `Username: ${username}`;
 
               // Отправка username в Unity напрямую в GameSession
               if (window.unityInstance) {
@@ -145,4 +146,4 @@
       document.body.appendChild(script);
     </script>
   </body>
-</html> 
+</html>
