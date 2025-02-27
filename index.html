@@ -10,7 +10,7 @@
   <body>
     <!-- Контейнер для Unity -->
     <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" width="1080" height="1920" tabindex="-1"></canvas>
+      <canvas id="unity-canvas" width="480" height="950" tabindex="-1"></canvas>
       <div id="unity-loading-bar">
         <div id="unity-logo"></div>
         <div id="unity-progress-bar-empty">
@@ -79,16 +79,6 @@
         showBanner: unityShowBanner,
       };
 
-      // Адаптация под мобильные устройства
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        var meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-        document.getElementsByTagName('head')[0].appendChild(meta);
-        document.querySelector("#unity-container").className = "unity-mobile";
-        canvas.className = "unity-mobile";
-      }
-
       document.querySelector("#unity-loading-bar").style.display = "block";
 
       // Загрузка скрипта Unity
@@ -102,9 +92,11 @@
           window.unityInstance = unityInstance;
           document.querySelector("#unity-loading-bar").style.display = "none";
 
-          // Автоматический переход в полноэкранный режим на ПК
+          // Автоматический переход в полноэкранный режим на ПК без изменения размеров канваса
           if (!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-              unityInstance.SetFullscreen(1);
+              setTimeout(() => {
+                  unityInstance.SetFullscreen(1);
+              }, 500); // Небольшая задержка для корректной инициализации
           }
 
           // Получение данных пользователя из Telegram Web App
